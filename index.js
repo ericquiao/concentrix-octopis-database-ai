@@ -3,15 +3,15 @@ const express = require("express");
 const app = express();
 
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const port = 3100;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.use(express.json())
-
-app.use(express.urlencoded({extended:true}))
-
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require("./routes/userRoutes");
 
 mongoose.connect(
   "mongodb+srv://admin:admin1234@zuitt-bootcamp.vhxdp.mongodb.net/courseBooking?retryWrites=true&w=majority",
@@ -42,8 +42,7 @@ db.once("open", () => {
 //   res.send(req.body.name)
 // })
 
-
-app.use("/api/users", userRoutes)
+app.use("/api/users", userRoutes);
 
 app.listen(port, () => {
   console.log(`server listening to port ${port}`);
