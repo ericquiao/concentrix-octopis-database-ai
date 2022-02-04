@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 
 const app = express();
 
-const mongoose = require("mongoose");
-const cors = require("cors");
+const mongoose = require('mongoose');
+const cors = require('cors');
 
 const port = 3100;
 
@@ -11,10 +11,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const userRoutes = require("./routes/userRoutes");
+const userRoutes = require('./routes/userRoutes');
+const courseRoutes = require('./routes/courseRoutes');
 
 mongoose.connect(
-  "mongodb+srv://admin:admin1234@zuitt-bootcamp.vhxdp.mongodb.net/courseBooking?retryWrites=true&w=majority",
+  'mongodb+srv://admin:admin1234@zuitt-bootcamp.vhxdp.mongodb.net/courseBooking?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -23,10 +24,10 @@ mongoose.connect(
 
 const db = mongoose.connection;
 
-db.on("error", console.error.bind(console, "connection error: "));
+db.on('error', console.error.bind(console, 'connection error: '));
 
-db.once("open", () => {
-  console.log("connected to database");
+db.once('open', () => {
+  console.log('connected to database');
 });
 
 //Create a Schema
@@ -42,7 +43,8 @@ db.once("open", () => {
 //   res.send(req.body.name)
 // })
 
-app.use("/api/users", userRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/courses', courseRoutes);
 
 app.listen(port, () => {
   console.log(`server listening to port ${port}`);

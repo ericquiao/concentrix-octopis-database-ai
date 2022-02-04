@@ -19,7 +19,6 @@
 
   module.exports.decode = (token) => {
    
-
     let slicedToken = token.slice(7, token.length)
 
     //console.log(slicedToken)

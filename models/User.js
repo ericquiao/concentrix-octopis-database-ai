@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
   mobileNo:{type:String, required:[true, 'Mobile number is required']},
   age:{type:Number, required:[false, "Age is optional"]},
   isAdmin:{type:Boolean, default: false},
-    enrollments:[
+  enrollments:[
       {
         courseId:{
                   type:String,
@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema(
         },
         enrolledOn:{
                   type:Date,
-                  required:[true, "Date is requierd"]
+                  required:[true, "Date is required"],
+                  default: new Date()
         },
         status:{
           type:String,
