@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
-const courseSchema = new mongoose.Schema({
-  courseName: {
+const productSchema = new mongoose.Schema({
+  productName: {
     type: String,
-    required: [true, 'Course name is required'],
+    required: [true, 'Product name is required'],
   },
   description: {
     type: String,
-    required: [true, 'Course description is required'],
+    required: [true, 'Product description is required'],
   },
   price: {
     type: Number,
-    required: [true, 'Course price is required'],
+    required: [true, 'Product price is required'],
   },
   isActive: {
     type: Boolean,
@@ -20,13 +20,13 @@ const courseSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  enrollees: [
+  buyers: [
     {
       userId: {
         type: String,
         required: [true, 'User ID is required'],
       },
-      enrolledOn: {
+      DateOfOrder: {
         type: Date,
         default: new Date(),
       },
@@ -34,5 +34,5 @@ const courseSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = mongoose.model('Product', productSchema);
 

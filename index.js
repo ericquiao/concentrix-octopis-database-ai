@@ -5,17 +5,19 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const port = 3100;
+const port = 7777;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+//Routes
 const userRoutes = require('./routes/userRoutes');
-const courseRoutes = require('./routes/courseRoutes');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes')
 
 mongoose.connect(
-  'mongodb+srv://admin:admin1234@zuitt-bootcamp.vhxdp.mongodb.net/courseBooking?retryWrites=true&w=majority',
+  'mongodb+srv://admin:1234@cluster0.b0njd.mongodb.net/e-commerce?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -30,21 +32,11 @@ db.once('open', () => {
   console.log('connected to database');
 });
 
-//Create a Schema
-
-//Create Routes
-// app.get('/users', (req,res)=>{
-//  // console.log('hello')
-//   res.send('Hello')
-// })
-
-// app.post('/users', (req,res)=>{
-//   //console.log(req)
-//   res.send(req.body.name)
-// })
 
 app.use('/api/users', userRoutes);
-app.use('/api/courses', courseRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+
 
 app.listen(port, () => {
   console.log(`server listening to port ${port}`);

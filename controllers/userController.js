@@ -1,11 +1,93 @@
-//Business logic including model methods
-
 const User = require("../models/User");
 const auth = require("../auth")
-const Course = require('../models/Course');
-
+const Course = require('../models/Product');
 const bcrypt = require('bcrypt');
 
+
+module.exports.register = (reqBody) => {
+  const { firstName, lastName, email, password, mobileNo, age, adminKey } = reqBody;
+   
+  return User.findOne({email}).then((result,error)=>{
+    if(error){
+      return error
+    } else if(result !== null){
+      return ('email already used! please try again')
+    } else {
+      
+      let isAdmin = adminKey ? true : false;
+  
+      const newUser = new User({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: bcrypt.hashSync(password,10),
+        mobileNo: mobileNo,
+        age: age,
+        isAdmin: isAdmin
+      });
+   
+     return newUser.save().then( (result, error) => {
+       if(result){
+         console.log('registration successful')
+         return true
+       } else {
+         return error
+       }
+     })
+     }
+  })
+};
+
+module.exports.login = (reqBody) => {
+  const {email,password} = reqBody
+
+  return User.findOne({email: email}).then((result,error)=>{
+
+    if(result == null){
+      console.log('not authenticated');
+      return false
+    } 
+    else {
+      
+      let isPwCorrect = bcrypt.compareSync(password, result.password)
+        
+        if(isPwCorrect == true){
+        console.log('authentication success')
+        return {access:auth.createAccessToken(result)}
+      } else{
+        console.log('not authenticated')
+        return false
+      }
+    }
+
+  })
+}
+
+module.exports.setToAdmin = (update)=> {
+ 
+  const {_id,isAdmin} = update
+
+  const updatedUser = {isAdmin:true}
+
+    return User.findByIdAndUpdate(_id, updatedUser, {new:true}).
+      then((result) => {
+      const {firstName,lastName} = result
+      console.log(`${firstName} ${lastName} set as admin`)
+      return true 
+    })
+      
+}
+
+
+module.exports.getAllUsers = () => {
+  return  User.find().then((result,error)=>{
+      if(result !== null){
+        return result
+      }else{
+        return error
+      }
+    })
+  }
 
 module.exports.checkEmail = (email) => {
   return User.findOne({ email: email }).then((result, error) => {
@@ -21,65 +103,6 @@ module.exports.checkEmail = (email) => {
     }
   });
 };
-
-module.exports.register = (reqBody) => {
-  const { firstName, lastName, email, password, mobileNo, age } = reqBody;
-   //console.log(firstName)
-
-  const newUser = new User({
-     firstName: firstName,
-     lastName: lastName,
-     email: email,
-     password: bcrypt.hashSync(password,10),
-     mobileNo: mobileNo,
-     age: age,
-   });
-
-   //save the newUser object to  the database
-	return newUser.save().then( (result, error) => {
-		//console.log(result)	//document
-		if(result){
-			return true
-		} else {
-			return error
-		}
-	})
-};
-
-module.exports.getAllUsers = () => {
-return  User.find().then((result,error)=>{
-    if(result !== null){
-      return result
-    }else{
-      return error
-    }
-  })
-}
-
-module.exports.login = (reqBody) => {
-  const {email,password} = reqBody
-  return User.findOne({email: email}).then((result,error)=>{
-   
-
-    if(result == null){
-      console.log('email null');
-      return false
-    } else {
-      
-      let isPwCorrect = bcrypt.compareSync(password, result.password)
-      //return json web token;
-        //invoke the fuction which creates the token upon logging in
-        // requirements for creating a token:
-          //if password matches from existing pw from db
-        
-        if(isPwCorrect == true){
-        return {access:auth.createAccessToken(result)}
-      } else{
-        return false
-      }
-    }
-  })
-}
 
 module.exports.getUserProfile = (reqBody) => {
   return User.findById({_id: reqBody.id}).then(result =>{
@@ -160,6 +183,14 @@ module.exports.deleteUserByFindOneandDelete = (email) => {
 module.exports.enroll = async (data) => {
 	const {userId, courseId} = data
 
+  Course.findOne({courseId}).then(result => {
+    
+    console.log(result.courseName)
+    console.log(result.enrollees)
+
+  
+  })
+
 
 	//look for matching document of a user
 	const userEnroll = await User.findById(userId).then( (result, err) => {
@@ -168,7 +199,7 @@ module.exports.enroll = async (data) => {
 		} else {
     //  console.log(result)
 			result.enrollments.push({courseId: courseId})
-     console.log(result)
+    // console.log(result)
 			return  result.save().then(() => true)
 		}
 
@@ -194,3 +225,4 @@ module.exports.enroll = async (data) => {
 		return false
 	}
 }
+

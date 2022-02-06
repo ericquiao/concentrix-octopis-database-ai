@@ -4,23 +4,21 @@ const userSchema = new mongoose.Schema(
   lastName:{type:String, required:[true, "Last name is required"]},
   email:{type:String, required:[true, "Email number is required"]},
   password:{type:String, required:[true, "Password number is required"]},
-  mobileNo:{type:String, required:[true, 'Mobile number is required']},
-  age:{type:Number, required:[false, "Age is optional"]},
   isAdmin:{type:Boolean, default: false},
-  enrollments:[
+  orders:[
       {
-        courseId:{
+        productId:{
                   type:String,
-                  required:[true, "Course ID is required"]
+                  required:[true, "Product Id is required"]
         },
-        enrolledOn:{
+        DateOfOrder:{
                   type:Date,
                   required:[true, "Date is required"],
                   default: new Date()
         },
         status:{
           type:String,
-          default: "Enrolled"
+          default: "For Packing"
         }
       }
     ]
