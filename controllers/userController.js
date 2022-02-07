@@ -1,11 +1,11 @@
-const User = require("../models/User");
+const User = require('../models/User')
 const auth = require("../auth")
 const Course = require('../models/Product');
 const bcrypt = require('bcrypt');
 
 
 module.exports.register = (reqBody) => {
-  const { firstName, lastName, email, password, mobileNo, age, adminKey } = reqBody;
+  const { email, password, adminKey } = reqBody;
    
   return User.findOne({email}).then((result,error)=>{
     if(error){
@@ -14,21 +14,21 @@ module.exports.register = (reqBody) => {
       return ('email already used! please try again')
     } else {
       
+      console.log(adminKey)
+
       let isAdmin = adminKey ? true : false;
+
+      let accessStatus = isAdmin? 'Admin': 'User only'
   
       const newUser = new User({
-        firstName: firstName,
-        lastName: lastName,
         email: email,
         password: bcrypt.hashSync(password,10),
-        mobileNo: mobileNo,
-        age: age,
         isAdmin: isAdmin
       });
    
      return newUser.save().then( (result, error) => {
        if(result){
-         console.log('registration successful')
+         console.log(`${accessStatus} registration successful`)
          return true
        } else {
          return error
@@ -67,14 +67,19 @@ module.exports.setToAdmin = (update)=> {
  
   const {_id,isAdmin} = update
 
+  console.log(_id)
+  console.log(isAdmin)
+
   const updatedUser = {isAdmin:true}
 
-    return User.findByIdAndUpdate(_id, updatedUser, {new:true}).
-      then((result) => {
-      const {firstName,lastName} = result
-      console.log(`${firstName} ${lastName} set as admin`)
-      return true 
-    })
+    User.findByIdAndUpdate(_id, updatedUser, {new:true}).
+        then((result) => {
+
+        console.log(result)
+    //   const {email} = result
+    //  console.log(`${email} set as admin`)
+    //   return true 
+     })
       
 }
 

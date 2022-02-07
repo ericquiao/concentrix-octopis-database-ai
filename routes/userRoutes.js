@@ -6,11 +6,13 @@ const userController = require('../controllers/userController');
 
 const auth = require('./../auth');
 
+// Register a User
 router.post('/register', (req, res) => {
   console.log(req.body);
   userController.register(req.body).then((result) => res.send(result));
 });
 
+// Login a User
 router.post('/login', (req, res) => {
   userController
     .login(req.body)
@@ -18,12 +20,15 @@ router.post('/login', (req, res) => {
     .then((result) => res.send(result));
 });
 
+// Is admin
+
 router.put('/setAsAdmin', auth.verify, (req, res) => {
 
   let access = auth.decode(req.headers.authorization);
 
-  console.log(req.body.isAdmin)
-
+  console.log(req.body)
+  
+  console.log(access)
  if(access.isAdmin == false){
     console.log('not an admin')
     res.send(false)
@@ -31,17 +36,19 @@ router.put('/setAsAdmin', auth.verify, (req, res) => {
    else{
      
    userController.setToAdmin(req.body)
-  .then((result)=>res.send(result))
+ // .then((result)=>res.send(result))
  }
 
 });
 
-
-
-
-router.get('/', (req, res) => {
+// Get all User
+router.get('/all', (req, res) => {
   userController.getAllUsers().then((result) => res.send(result));
 });
+
+
+
+
 
 router.get('/details', auth.verify, (req, res) => {
   //console.log(req.headers.authorization);

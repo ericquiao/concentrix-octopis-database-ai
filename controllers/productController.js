@@ -4,19 +4,72 @@ const auth = require('./../auth');
 const bcrypt = require('bcrypt');
 
 
-module.exports.createProduct= (reqBody) => {
-  const { productName, description, price, isActive, createdOn } = reqBody;
+
+
+//retrieve all products
+module.exports.getAllProducts = () => {
+ 
+  return Product.find().then((result, error) => {
+    if (result !== null) {
+      return result;
+    } else {
+      return error;
+    }
+  });
+};
+
+// Get all active Products
+module.exports.getAllActive = () => {
+  return Product.find({isActive:true}).then((result, error) => {
+
+   // console.log(result)
+    if (result !== null) {
+      return result;
+    } else {
+      return error;
+    }
+   });
+};
+
+
+//update product
+
+module.exports.updateInformation = (productId, reqBody) => {
+
+
+   const {name, description, price, isActive} = reqBody
+
+   const updatedProduct = {
+     name:name,
+     description:description,
+     price:price,
+     isActive:isActive
+   
+  }
+  return Product.findByIdAndUpdate(productId, updatedProduct, {new:true}).
+    then(result =>{
+    return result
+  })
+
+ }
+
+
+
+//add product
+module.exports.addProduct= (reqBody) => {
+  const { name, description, price, isActive, createdOn } = reqBody;
   
-  
-   return Product.findOne({productName}).then((result,error)=>{
+   
+
+   return Product.findOne({name}).then((result,error)=>{
     
-      if(error){
+        if(error){
       return error
     } else if(result){
-      return ('product existing')
+      return ('cannot add existing product')
     } else{
       const newProduct = new Product({
-        productName: productName,
+        name: name,
         description: description,
         price: price,
         isActive: isActive,
@@ -36,51 +89,42 @@ module.exports.createProduct= (reqBody) => {
   })
 };
 
-module.exports.getAllProducts = () => {
- 
-  return Product.find().then((result, error) => {
-    if (result !== null) {
-      return result;
-    } else {
-      return error;
-    }
-  });
-};
 
-module.exports.getSpecificProduct = (productName) => {
-  
-  return Product.find({productName}).then((result, error) => {
-    
-    if(result == null){
-    return false
+//get specific product
+module.exports.getSpecificProduct = (id) => {
+
+return Product.findOne({_id:id}).then((result, error) => {
+    console.log(result)
+     if(result == null){
+     return ('product not existing')
+     }
+     if (result !== null) { 
+       return result;
+     } else {
+       return error;
     }
-    if (result !== null) { 
-      return result;
-    } else {
-      return error;
-   }
    });
 };
 
-module.exports.updateInformation = (reqBody) => {
 
 
-  const {_id, productName, description, price, isActive} = reqBody
 
-  console.log(_id)
-  console.log(isActive)
+module.exports.archiveProduct = (productId, reqBody) => {
+
+
+  const {name, description, price, isActive} = reqBody
 
   const updatedProduct = {
-    productName:productName,
+    name:name,
     description:description,
     price:price,
     isActive:isActive
-   
-  }
-  return Product.findByIdAndUpdate(_id, updatedProduct, {new:true}).
-    then(result =>{
-    return result
-  })
+  
+ }
+ return Product.findByIdAndUpdate(productId, updatedProduct, {new:true}).
+   then(result =>{
+   return result
+ })
 
 }
 
@@ -92,29 +136,6 @@ module.exports.updateInformation = (reqBody) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-module.exports.getActiveCourses = () => {
-
-  return Course.find({isActive:true}).then((result, error) => {
-
-   // console.log(result)
-    if (result !== null) {
-      return result;
-    } else {
-      return error;
-    }
-   });
-};
 
 module.exports.getSpecificCourse = (course) => {
   

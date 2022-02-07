@@ -5,78 +5,92 @@ const productController = require('../controllers/productController');
 
 const auth = require('../auth');
 
-//create product admin only
-router.post('/create-product', auth.verify, (req, res) => {
+//retrieve all products
+router.get('/all', auth.verify, (req, res) => {
+
+  try{  
+  
+   productController.getAllProducts()
+   .then((result) => res.send(result));
+  }catch(err){
+    console.error(err)
+  }
+
+});
+
+// Get all active Products
+
+router.get('/active', auth.verify, (req, res) => {
+  //console.log('active')
+  productController.getAllActive().then((result) => res.send(result));
+});
+
+
+//add product admin only
+router.post('/', auth.verify, (req, res) => {
   let access = auth.decode(req.headers.authorization);
 
   if (access.isAdmin == false) {
     console.log('not an admin');
     res.send(false);
   } else {
-    productController
-      .createProduct(req.body)
+    console.log('this is admin')
+    productController 
+      .addProduct(req.body)
       .then((result) => res.send(result));
   }
 });
 
-//retrieve all products
-router.get('/', auth.verify, (req, res) => {
-  
-   productController.getAllProducts()
-  .then((result) => res.send(result));
-});
+//update product
 
-
-router.get('/specific-product', auth.verify, (req, res) => {
-
-  productController
-    .getSpecificProduct(req.body.productName)
-     .then((result) => res.send(result));
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-router.put('/update-info', auth.verify, (req, res) => {
+router.put('/:productId', auth.verify, (req, res) => {
  
   let access = auth.decode(req.headers.authorization);
+
+  let productId = req.params.productId
 
   if (access.isAdmin == false) {
     console.log('not an admin');
     res.send(false);
   } else {
      productController
-       .updateInformation(req.body)
+       .updateInformation(productId, req.body)
        .then((result) => res.send(result));
   }
  
 });
+
+
+//get specific product
+router.get('/:productId', auth.verify,(req,res)=>{
+
+  let productId = req.params.productId
+
+  console.log(productId)
+    productController
+      .getSpecificProduct(productId)
+      .then((result)=> res.send(result))
+})
+
+
+// archive product
+router.put('/:productId/archive', auth.verify, (req, res) => {
+ 
+  let access = auth.decode(req.headers.authorization);
+
+  let productId = req.params.productId
+
+  if (access.isAdmin == false) {
+    console.log('not an admin');
+    res.send(false);
+  } else {
+   //  productController
+   //    .archiveProduct(productId, req.body)
+   //    .then((result) => res.send(result));
+  }
+ 
+});
+
 
 
 
