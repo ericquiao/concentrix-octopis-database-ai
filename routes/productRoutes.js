@@ -6,7 +6,7 @@ const productController = require('../controllers/productController');
 const auth = require('../auth');
 
 //retrieve all products
-router.get('/all', auth.verify, (req, res) => {
+router.get('/', auth.verify, (req, res) => {
 
   try{  
   
