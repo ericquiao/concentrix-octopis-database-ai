@@ -5,7 +5,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const port = 7777;
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +36,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
 
+let port = process.env.PORT || 7777
 
 app.listen(port, () => {
   console.log(`server listening to port ${port}`);
