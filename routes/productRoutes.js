@@ -19,30 +19,12 @@ router.get('/all', auth.verify, (req, res) => {
 });
 
 // Get all active Products
-
 router.get('/active', auth.verify, (req, res) => {
   //console.log('active')
   productController.getAllActive().then((result) => res.send(result));
 });
 
-
-//add product admin only
-router.post('/', auth.verify, (req, res) => {
-  let access = auth.decode(req.headers.authorization);
-
-  if (access.isAdmin == false) {
-    console.log('not an admin');
-    res.send(false);
-  } else {
-    console.log('this is admin')
-    productController 
-      .addProduct(req.body)
-      .then((result) => res.send(result));
-  }
-});
-
-//update product
-
+//update product admin only
 router.put('/:productId', auth.verify, (req, res) => {
  
   let access = auth.decode(req.headers.authorization);
@@ -60,20 +42,40 @@ router.put('/:productId', auth.verify, (req, res) => {
  
 });
 
+//add product admin only
+router.post('/', auth.verify, (req, res) => {
+  let access = auth.decode(req.headers.authorization);
+
+  if (access.isAdmin == false) {
+    console.log('not an admin');
+    res.send(false);
+  } else {
+    console.log('this is admin')
+    productController 
+      .addProduct(req.body)
+      .then((result) => res.send(result));
+  }
+});
 
 //get specific product
 router.get('/:productId', auth.verify,(req,res)=>{
 
-  let productId = req.params.productId
+  let access = auth.decode(req.headers.authorization);
 
+  if (access.isAdmin == false) {
+    console.log('not an admin');
+    res.send('not an admin');
+  } else {
+
+  let productId = req.params.productId
   console.log(productId)
     productController
       .getSpecificProduct(productId)
       .then((result)=> res.send(result))
+  }
 })
 
-
-// archive product
+// archive product admin only
 router.put('/:productId/archive', auth.verify, (req, res) => {
  
   let access = auth.decode(req.headers.authorization);
@@ -82,45 +84,36 @@ router.put('/:productId/archive', auth.verify, (req, res) => {
 
   if (access.isAdmin == false) {
     console.log('not an admin');
-    res.send(false);
+    res.send('not an admin');
   } else {
-   //  productController
-   //    .archiveProduct(productId, req.body)
-   //    .then((result) => res.send(result));
+    console.log('admin account')
+     productController
+       .archiveProduct(productId)
+       .then((result) => res.send(`${result._id} archived`));
+  }
+ 
+});
+
+// activate product admin only
+router.put('/:productId/activate', auth.verify, (req, res) => {
+ 
+  let access = auth.decode(req.headers.authorization);
+
+  let productId = req.params.productId
+
+  if (access.isAdmin == false) {
+    console.log('not an admin');
+    res.send('not an admin');
+  } else {
+    console.log('admin account')
+     productController
+       .activateProduct(productId)
+       .then((result) => res.send(`${result._id} activated`));
   }
  
 });
 
 
 
-
-
-
-
-
-
-
-
-
-//retrieving only active courses
-router.get('/active-courses', auth.verify, (req, res) => {
-  //console.log('active')
-  courseController.getActiveCourses().then((result) => res.send(result));
-});
-
-//get a specific course using findOne()
-router.get('/:courseName/specific-course', auth.verify, (req, res) => {
-  courseController
-    .getSpecificCourse(req.params.courseName)
-    .then((result) => res.send(result));
-});
-
-
-
-router.get('/:courseId', auth.verify, (req, res) => {
-  let paramsId = req.params.courseId;
-
-  courseController.getCourseById(paramsId).then((result) => res.send(result));
-});
 
 module.exports = router;

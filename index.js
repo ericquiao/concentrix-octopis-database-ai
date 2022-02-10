@@ -14,7 +14,6 @@ app.use(cors());
 //Routes
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
-const orderRoutes = require('./routes/orderRoutes')
 
 mongoose.connect(
   'mongodb+srv://admin:1234@cluster0.b0njd.mongodb.net/e-commerce?retryWrites=true&w=majority',
@@ -35,7 +34,7 @@ db.once('open', () => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
+
 
 
 app.listen(port, () => {

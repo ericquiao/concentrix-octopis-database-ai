@@ -31,9 +31,7 @@ module.exports.getAllActive = () => {
    });
 };
 
-
-//update product
-
+//update product admin only
 module.exports.updateInformation = (productId, reqBody) => {
 
 
@@ -53,14 +51,10 @@ module.exports.updateInformation = (productId, reqBody) => {
 
  }
 
-
-
-//add product
+//add product admin only
 module.exports.addProduct= (reqBody) => {
   const { name, description, price, isActive, createdOn } = reqBody;
   
-   
-
    return Product.findOne({name}).then((result,error)=>{
     
         if(error){
@@ -89,7 +83,6 @@ module.exports.addProduct= (reqBody) => {
   })
 };
 
-
 //get specific product
 module.exports.getSpecificProduct = (id) => {
 
@@ -106,77 +99,38 @@ return Product.findOne({_id:id}).then((result, error) => {
    });
 };
 
+// archive product admin only
+module.exports.archiveProduct = (productId) => {
 
-
-
-module.exports.archiveProduct = (productId, reqBody) => {
-
-
-  const {name, description, price, isActive} = reqBody
+    console.log(productId)
 
   const updatedProduct = {
-    name:name,
-    description:description,
-    price:price,
-    isActive:isActive
+    isActive:false
+  }
   
- }
  return Product.findByIdAndUpdate(productId, updatedProduct, {new:true}).
    then(result =>{
+
    return result
  })
 
 }
 
+// activate product admin only
+module.exports.activateProduct = (productId) => {
 
+  console.log(productId)
 
+const updatedProduct = {
+  isActive:true
+}
+console.log(updatedProduct)
+return Product.findByIdAndUpdate(productId, updatedProduct, {new:true}).then((result) =>{
 
+ return result
+})
 
-
-
-
-
-
-module.exports.getSpecificCourse = (course) => {
-  
-  return Course.find({courseName:course}).then((result, error) => {
-    if(result == null){
-    return ('course not existing')
-    }
-    if (result !== null) {
-      return result;
-    } else {
-      return error;
-   }
-   });
-};
-
-module.exports.getSpecificCourse2 = (course) => {
-
-  return Course.findOne({courseName:course}).then((result, error) => {
-    if(result == null){
-      return ('course not existing')
-    }
-
-    if (result !== null) {
-      return result;
-    } else {
-      return error;
-   }
-   });
 }
 
- 
-module.exports.getCourseById = (courseId) => {
-  return Course.findById({_id:courseId}).then(
-    (result,error) => {
-      if(result == null){
-        return ('id not existing')
-      }
-      if (result !== null) {
-        return result;
-      } else {
-        return error;
-      }
-    });
- }
+
+
