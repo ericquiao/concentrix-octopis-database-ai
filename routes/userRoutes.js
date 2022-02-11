@@ -81,13 +81,14 @@ router.delete('/:userId/delete', (req, res) => {
 
 //my Orders
 router.get('/myOrders', auth.verify, (req, res) => {
-  const userId = req.body._id;
+ // const userId = req.body._id;
   let access = auth.decode(req.headers.authorization);
+ // console.log(access.id)
   if (access.isAdmin == true) {
     console.log('not for admin');
     res.send(false);
   } else {
-    userController.getMyOrder(userId).then((result) => {
+    userController.getMyOrder(access.id).then((result) => {
       res.send(result);
     });
   }
