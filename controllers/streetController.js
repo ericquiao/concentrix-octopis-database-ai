@@ -1,11 +1,11 @@
-const User = require('../models/User');
+const Street = require('../models/Street');
 
 
 // Register a User
-module.exports.register = (reqBody) => {
-  const { UID,NAME,STREET_ID,BIRTHDAY,HEALTH_STATUS_ID } = reqBody;
+module.exports.registerStreet = (reqBody) => {
+  const { UID, STREET_NAME, CITY_ID } = reqBody;
 
-  return User.findOne({ NAME }).then((result, error) => {
+  return Street.findOne({ STREET_NAME }).then((result, error) => {
     if (error) {
       return error;
     } else if (result !== null) {
@@ -13,17 +13,15 @@ module.exports.register = (reqBody) => {
     } else {
 
 
-      const newUser = new User({
+      const newStreet = new Street({
         UID:UID,
-        NAME: NAME,
-        STREET_ID:STREET_ID,
-        BIRTHDAY:BIRTHDAY,
-        HEALTH_STATUS_ID:HEALTH_STATUS_ID
+        STREET_NAME:STREET_NAME,
+        CITY_ID:CITY_ID
       });
 
-      return newUser.save().then((result, error) => {
+      return newStreet.save().then((result, error) => {
         if (result) {
-          console.log(`registration successful`);
+          console.log(`Street registration successful`);
           return true;
         } else {
           return error;
@@ -33,8 +31,8 @@ module.exports.register = (reqBody) => {
   });
 };
 
-module.exports.getAllUsers = () => {
-  return User.find().then((result, error) => {
+module.exports.getAllStreets = () => {
+  return Street.find().then((result, error) => {
     if (result !== null) {
       return result;
     } else {

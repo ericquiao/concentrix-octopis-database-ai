@@ -1,7 +1,7 @@
 {
-  "name": "course-booking",
+  "name": "concentrix-exam",
   "version": "1.0.0",
-  "description": "building API for course-booking",
+  "description": "building API for concentrix technical-exam",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

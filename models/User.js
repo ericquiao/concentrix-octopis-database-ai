@@ -1,42 +1,28 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-	email : {
+	UID : {
 		type : String,
-		required : [true, "Email is required"]
+		required : [true, "UID is required"]
 	},
-	password : {
+	NAME : {
 		type : String,
-		required : [true, "Password is required"]
+		required : [true, "NAME is required"]
 	},
-	isAdmin : { 
-		type : Boolean,
-		default : false 
+	STREET_ID : {
+		type : String,
+		required : [true, "STREETID is required"]
 	},
-	orders : [ 
-		{
-			products : [
-				{
-					productId : {
-						type: String,
-						required : [true, "Product ID is required"]
-					},
-					quantity : {
-						type: Number,
-						required : [true, "Product quantity is required"]
-					}
-				}
-			],
-			totalAmount : {
-				type: Number,
-				required : [true, "Total amount is required"]
-			},
-			purchasedOn : {
-				type : Date,
-				default : new Date()
-			}
-		}
-	]
+	BIRTHDAY : {
+		type : String,
+		required : [true, "BIRTHDAY is required"]
+	},
+	HEALTH_STATUS_ID : {
+		type : String,
+		required : [true, "HEALTHSTATUS is required"]
+	},
+
+	
 })
 
 module.exports = mongoose.model("User", userSchema);
