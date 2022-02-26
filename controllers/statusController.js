@@ -4,7 +4,7 @@ const Status = require("../models/Status");
 module.exports.registerStatus = (reqBody) => {
   const { UID, SEVERITY, COUGH, COLD, FEVER} = reqBody;
 
-  console.log('helo')
+ 
 
   return Status.findOne({ SEVERITY }).then((result, error) => {
     if (error) {
